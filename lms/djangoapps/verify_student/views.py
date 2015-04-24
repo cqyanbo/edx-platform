@@ -383,7 +383,7 @@ class PayAndVerifyView(View):
         # get available payment processors
         if unexpired_paid_course_mode.sku:
             # transaction will be conducted via ecommerce service
-            processors = EcommerceAPI().get_processors(request.user)
+            processors = EcommerceAPI(request.user).get_processors()
         else:
             # transaction will be conducted using legacy shopping cart
             processors = [settings.CC_PROCESSOR_NAME]
@@ -655,9 +655,9 @@ class PayAndVerifyView(View):
 def checkout_with_ecommerce_service(user, course_key, course_mode, processor):     # pylint: disable=invalid-name
     """ Create a new basket and trigger immediate checkout, using the E-Commerce API. """
     try:
-        api = EcommerceAPI()
+        api = EcommerceAPI(user)
         # Make an API call to create the order and retrieve the results
-        response_data = api.create_basket(user, course_mode.sku, processor)
+        response_data = api.create_basket(course_mode.sku, processor)
         # Pass the payment parameters directly from the API response.
         return response_data.get('payment_data')
     except ApiError:

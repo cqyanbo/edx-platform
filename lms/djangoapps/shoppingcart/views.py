@@ -858,8 +858,8 @@ def _get_external_order(request, order_number):
 
     """
     try:
-        api = EcommerceAPI()
-        order_number, order_status, order_data = api.get_order(request.user, order_number)
+        api = EcommerceAPI(request.user)
+        order_number, order_status, order_data = api.get_order(order_number)
         billing = order_data.get('billing_address', {})
         country = billing.get('country', {})
 

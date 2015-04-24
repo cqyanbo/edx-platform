@@ -24,7 +24,7 @@ class EcommerceApiTestMixin(object):
     ORDER_DATA = {'number': ORDER_NUMBER}
     ECOMMERCE_API_SUCCESSFUL_BODY = {
         'id': BASKET_ID,
-        'order': {'number': ORDER_NUMBER},   # never both None.
+        'order': {'number': ORDER_NUMBER},  # never both None.
         'payment_data': PAYMENT_DATA,
     }
     ECOMMERCE_API_SUCCESSFUL_BODY_JSON = json.dumps(ECOMMERCE_API_SUCCESSFUL_BODY)  # pylint: disable=invalid-name
@@ -61,9 +61,10 @@ class EcommerceApiTestMixin(object):
             else:
                 response_data['order'] = {'number': self.ORDER_NUMBER}
             body = json.dumps(response_data)
-        httpretty.register_uri(httpretty.POST, url, status=status, body=body)
+        httpretty.register_uri(httpretty.POST, url, status=status, body=body,
+                               adding_headers={'Content-Type': 'application/json'})
 
-    class mock_create_basket(object):    # pylint: disable=invalid-name
+    class mock_create_basket(object):  # pylint: disable=invalid-name
         """ Mocks calls to EcommerceAPI.create_basket. """
 
         patch = None

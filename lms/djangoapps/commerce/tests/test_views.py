@@ -5,6 +5,7 @@ from uuid import uuid4
 
 from ddt import ddt, data
 from django.core.urlresolvers import reverse
+from django.test import TestCase
 from django.test.utils import override_settings
 from xmodule.modulestore.tests.django_utils import ModuleStoreTestCase
 from xmodule.modulestore.tests.factories import CourseFactory
@@ -296,6 +297,27 @@ class OrdersViewTests(BasketsViewTests):
 
     (XCOM-214) remove after release.
     """
+
     def setUp(self):
         super(OrdersViewTests, self).setUp()
         self.url = reverse('commerce:orders')
+
+
+class BasketOrderViewTests(TestCase):
+    def test_order_found(self):
+        """ If the order is located, the view should pass the data from the API. """
+        self.fail()
+
+    def test_order_not_found(self):
+        """ If the order is not found, the view should return a 404. """
+        self.fail()
+
+    def test_login_required(self):
+        """ The view should return 401 if the user is not logged in. """
+        self.fail()
+
+
+class ReceiptViewTests(TestCase):
+    def test_login_required(self):
+        """ The view should return 401 if the user is not logged in. """
+        self.fail()
