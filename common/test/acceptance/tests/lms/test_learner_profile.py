@@ -4,6 +4,7 @@ End-to-end tests for Student's Profile Page.
 """
 from datetime import datetime
 from bok_choy.web_app_test import WebAppTest
+from nose.plugins.attrib import attr
 
 from ...pages.common.logout import LogoutPage
 from ...pages.lms.account_settings import AccountSettingsPage
@@ -14,6 +15,7 @@ from ...pages.lms.dashboard import DashboardPage
 from ..helpers import EventsTestMixin
 
 
+@attr('shard_4')
 class LearnerProfileTestMixin(EventsTestMixin):
     """
     Mixin with helper methods for testing learner profile pages.
@@ -146,6 +148,7 @@ class LearnerProfileTestMixin(EventsTestMixin):
         )
 
 
+@attr('shard_4')
 class OwnLearnerProfilePageTest(LearnerProfileTestMixin, WebAppTest):
     """
     Tests that verify a student's own profile page.
@@ -627,6 +630,7 @@ class OwnLearnerProfilePageTest(LearnerProfileTestMixin, WebAppTest):
         self.assert_event_emitted_num_times(user_id, 'profile_image_uploaded_at', 2)
 
 
+@attr('shard_4')
 class DifferentUserLearnerProfilePageTest(LearnerProfileTestMixin, WebAppTest):
     """
     Tests that verify viewing the profile page of a different user.
