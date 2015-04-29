@@ -450,7 +450,10 @@ class ImportManager(object):
                 # Import all draft items into the courselike.
                 self.import_drafts(courselike, courselike_key, data_path, dest_id)
 
-            yield courselike
+            # Importing the drafts potentially triggered a new structure version.
+            # If so, the HEAD version_guid of the courselike returned above will be out-of-date.
+            # Fetch the course to return the most recent course version.
+            yield self.store.get_course(courselike.id.replace(branch=None, version_guid=None))
 
 
 class CourseImportManager(ImportManager):
