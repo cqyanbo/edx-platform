@@ -670,7 +670,7 @@ def _update_and_import_module(
         """
         Move the module to a new course.
         """
-        def _convert_ref_fields_to_new_namespace(reference):
+        def _convert_ref_fields_to_new_namespace(reference):  # pylint: disable=invalid-name
             """
             Convert a reference to the new namespace, but only
             if the original namespace matched the original course.
