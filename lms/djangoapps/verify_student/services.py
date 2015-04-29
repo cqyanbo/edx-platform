@@ -1,24 +1,30 @@
 """
-Implement the Reverification XBlock "reverification" server
+Implementation of "reverification" service to communicate with Reverification XBlock
 """
 
-from opaque_keys.edx.keys import CourseKey
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.urlresolvers import reverse
+
+from opaque_keys.edx.keys import CourseKey
+from xmodule.modulestore.django import modulestore
+from xmodule.modulestore.exceptions import ItemNotFoundError
+
 from verify_student.models import VerificationCheckpoint, VerificationStatus
 
 
 class ReverificationService(object):
-    """ Service to implement the Reverification XBlock "reverification" service
-
+    """
+    Reverification XBlock service
     """
 
     def get_status(self, user_id, course_id, related_assessment):
-        """ Check if the user has any verification attempt for this checkpoint and course_id
+        """
+        Get verification attempt status against a user for a given 'checkpoint'
+        and 'course_id'.
 
         Args:
             user_id(str): User Id string
-            course_id(str): A string of course_id
+            course_id(str): A string of course id
             related_assessment(str): Verification checkpoint name
 
         Returns:
@@ -36,10 +42,11 @@ class ReverificationService(object):
             return None
 
     def start_verification(self, course_id, related_assessment, item_id):
-        """ Get or create the verification checkpoint and return the re-verification link
+        """
+        Create re-verification link against a verification checkpoint.
 
         Args:
-            course_id(str): A string of course_id
+            course_id(str): A string of course id
             related_assessment(str): Verification checkpoint name
 
         Returns:
@@ -56,3 +63,26 @@ class ReverificationService(object):
             )
         )
         return re_verification_link
+
+    def get_attempts(self, user_id, course_id, related_assessment, location_id):
+        """
+        Get re-verification attempts against a user for a given 'checkpoint'
+        and 'course_id'.
+
+        Args:
+            user_id(str): User Id string
+            course_id(str): A string of course id
+            related_assessment(str): Verification checkpoint name
+            location_id(str): Reverification XBlock's location in courseware
+
+        Returns:
+            Number of re-verification attempts of a user
+        """
+        course_key = CourseKey.from_string(course_id)
+        return VerificationStatus.objects.filter(
+            user_id=user_id,
+            checkpoint__course_id=course_key,
+            checkpoint__checkpoint_name=related_assessment,
+            checkpoint__location_id=location_id,
+            status=VerificationStatus.VERIFICATION_STATUS_CHOICES.submitted
+        ).count()
